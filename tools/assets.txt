@@ -1,2 +1,3 @@
 runtime/doc/syntax.txt
 runtime/syntax/java.vim
+runtime/syntax/testdir/input/java_switch.java
