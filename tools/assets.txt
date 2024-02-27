@@ -1,0 +1,2 @@
+runtime/doc/syntax.txt
+runtime/syntax/java.vim
