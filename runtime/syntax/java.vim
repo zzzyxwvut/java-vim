@@ -2,7 +2,7 @@
 " Language:	Java
 " Maintainer:	Claudio Fleiner <claudio@fleiner.com>
 " URL:          https://github.com/fleiner/vim/blob/master/runtime/syntax/java.vim
-" Last Change:	2024 Mar 01
+" Last Change:	2024 Mar 02
 
 " Please check :help java.vim for comments on some of the options available.
 
@@ -280,7 +280,7 @@ if exists("java_highlight_debug")
   syn match   javaDebugSpecialCharacter contained "'\\.'"
   syn match   javaDebugSpecialCharacter contained "'\\''"
   syn keyword javaDebugNumber		contained 0 0l 0L
-  syn match   javaNumber		contained "\<\d\%(_*\d\)*\."
+  syn match   javaDebugNumber		contained "\<\d\%(_*\d\)*\."
   syn match   javaDebugNumber		contained "\<\%(0\%([xX]\x\%(_*\x\)*\|_*\o\%(_*\o\)*\|[bB][01]\%(_*[01]\)*\)\|[1-9]\%(_*\d\)*\)[lL]\=\>"
   syn match   javaDebugNumber		contained "\%(\<\d\%(_*\d\)*\.\%(\d\%(_*\d\)*\)\=\|\.\d\%(_*\d\)*\)\%([eE][-+]\=\d\%(_*\d\)*\)\=[fFdD]\=\>"
   syn match   javaDebugNumber		contained "\<\d\%(_*\d\)*[eE][-+]\=\d\%(_*\d\)*[fFdD]\=\>"
