@@ -1,6 +1,7 @@
 runtime/doc/syntax.txt
 runtime/syntax/java.vim
 runtime/syntax/testdir/input/java_comments.java
+runtime/syntax/testdir/input/java_contextual_keywords.java
 runtime/syntax/testdir/input/java_escapes.java
 runtime/syntax/testdir/input/java_numbers.java
 runtime/syntax/testdir/input/java_string.java
