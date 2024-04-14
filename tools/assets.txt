@@ -1,4 +1,6 @@
+runtime/doc/filetype.txt
 runtime/doc/syntax.txt
+runtime/ftplugin/java.vim
 runtime/syntax/java.vim
 runtime/syntax/testdir/input/java_comments.java
 runtime/syntax/testdir/input/java_contextual_keywords.java
