@@ -5,6 +5,7 @@ runtime/syntax/java.vim
 runtime/syntax/testdir/input/java_comments.java
 runtime/syntax/testdir/input/java_contextual_keywords.java
 runtime/syntax/testdir/input/java_escapes.java
+runtime/syntax/testdir/input/java_lambda_expressions.java
 runtime/syntax/testdir/input/java_methods_indent2.java
 runtime/syntax/testdir/input/java_methods_indent4.java
 runtime/syntax/testdir/input/java_methods_indent8.java
