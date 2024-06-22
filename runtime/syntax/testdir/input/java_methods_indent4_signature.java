@@ -1,10 +1,10 @@
 // VIM_TEST_SETUP let g:java_highlight_functions = 'indent4'
+// VIM_TEST_SETUP let g:java_highlight_signature = 1
 // VIM_TEST_SETUP set encoding=utf-8 termencoding=utf-8
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
-abstract class Indent4MethodsTests
+abstract class Indent4$MethodsTests
 { // DO NOT retab! THIS FILE; REMEMBER ABOUT testdir/ftplugin.
     // TYPES.
     record Τʬ<α>(α a) { }
@@ -42,9 +42,9 @@ abstract class Indent4MethodsTests
     private final Object instanceLock = new Object();
 
     // CONSTRUCTORS.
-    @Tɐggablɘ @Tɐggablɘ protected Indent4MethodsTests() { }
-    <T extends Comparable<T>> Indent4MethodsTests(T t, Void v) { }
-    private <T extends Comparable<T>> Indent4MethodsTests(T t) { }
+    @Tɐggablɘ @Tɐggablɘ protected Indent4$MethodsTests() { }
+    <T extends Comparable<T>> Indent4$MethodsTests(T t, Void v) { }
+    private <T extends Comparable<T>> Indent4$MethodsTests(T t) { }
 
     // METHODS.
     @Tɐggablɘ @Tɐggablɘ abstract void ascii$0_(////////////////
@@ -72,16 +72,16 @@ abstract class Indent4MethodsTests
                         java.util.function.Function<β, Τʬ<α>[][]> ƒ)
     {
         return
-    Indent4MethodsTests.<α, β>μʭʭ$98_(ƒ)[0];
+    Indent4$MethodsTests.<α, β>μʭʭ$98_(ƒ)[0];
     }
 
-    public static Class<?> classLock() { return Indent4MethodsTests.class; }
+    public static Class<?> classLock() { return Indent4$MethodsTests.class; }
 
     @Override @SuppressWarnings("cast")
-    public String toString() { return (String) "Indent4MethodsTests"; }
+    public String toString() { return (String) "Indent4$MethodsTests"; }
 }
 
-enum E4
+enum E4$
 {
     @SuppressWarnings("bespoke") A("a"),
     B("b"
@@ -97,8 +97,8 @@ enum E4
     G("g"), @Deprecated H("h");
 
     final String s;
-    private E4(String s) { this.s = s; }
-    private <δ> E4(String s, δ dummy) { this(s); }
+    private E4$(String s) { this.s = s; }
+    private <δ> E4$(String s, δ dummy) { this(s); }
 
     @Override public String toString() { return name().toUpperCase(); }
 }
