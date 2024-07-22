@@ -12,6 +12,8 @@ runtime/syntax/testdir/input/java_generics.java
 runtime/syntax/testdir/input/java_generics_signature.java
 runtime/syntax/testdir/input/java_lambda_expressions.java
 runtime/syntax/testdir/input/java_lambda_expressions_signature.java
+runtime/syntax/testdir/input/java_method_references.java
+runtime/syntax/testdir/input/java_method_references_signature.java
 runtime/syntax/testdir/input/java_methods_indent2.java
 runtime/syntax/testdir/input/java_methods_indent2_signature.java
 runtime/syntax/testdir/input/java_methods_indent4.java
