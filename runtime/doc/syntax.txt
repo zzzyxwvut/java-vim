@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 9.1.  Last change: 2024 Jul 23
+*syntax.txt*	For Vim version 9.1.  Last change: 2024 Jul 30
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -1908,6 +1908,10 @@ You can also disable this rendering by adding the following line to your
 vimrc file: >
 	:let html_no_rendering=1
 
+By default Vim synchronises the syntax to 250 lines before the first displayed
+line.  This can be configured using: >
+	:let html_minlines = 500
+<
 HTML comments are rather special (see an HTML reference document for the
 details), and the syntax coloring scheme will highlight all errors.
 However, if you prefer to use the wrong style (starts with <!-- and
@@ -2278,7 +2282,7 @@ By default mail.vim synchronises syntax to 100 lines before the first
 displayed line.  If you have a slow machine, and generally deal with emails
 with short headers, you can change this to a smaller value: >
 
-    :let mail_minlines = 30
+	:let mail_minlines = 30
 
 
 MAKE						*make.vim* *ft-make-syntax*
@@ -2288,6 +2292,16 @@ errors.  However, this may be too much coloring for you.  You can turn this
 feature off by using: >
 
 	:let make_no_commands = 1
+
+Comments are also highlighted by default.  You can turn this off by using: >
+
+	:let make_no_comments = 1
+
+Microsoft Makefile handles variable expansion and comments differently
+(backslashes are not used for escape).  If you see any wrong highlights
+because of this, you can try this: >
+
+	:let make_microsoft = 1
 
 
 MAPLE						*maple.vim* *ft-maple-syntax*
