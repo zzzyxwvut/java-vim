@@ -22,8 +22,10 @@ runtime/syntax/testdir/input/java_methods_indent8.java
 runtime/syntax/testdir/input/java_methods_indent8_signature.java
 runtime/syntax/testdir/input/java_methods_style.java
 runtime/syntax/testdir/input/java_methods_style_signature.java
+runtime/syntax/testdir/input/java_module_info.java
 runtime/syntax/testdir/input/java_numbers.java
 runtime/syntax/testdir/input/java_previews_430.java
 runtime/syntax/testdir/input/java_string.java
 runtime/syntax/testdir/input/java_switch.java
 runtime/syntax/testdir/input/java_unfoldment.java
+runtime/syntax/testdir/input/setup/java_module_info.vim
