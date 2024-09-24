@@ -1,10 +1,12 @@
+runtime/autoload/javaformat.vim
 runtime/doc/filetype.txt
 runtime/doc/syntax.txt
 runtime/ftplugin/java.vim
 runtime/syntax/java.vim
 runtime/syntax/testdir/input/java_annotations.java
 runtime/syntax/testdir/input/java_annotations_signature.java
-runtime/syntax/testdir/input/java_comments.java
+runtime/syntax/testdir/input/java_comments_html.java
+runtime/syntax/testdir/input/java_comments_markdown.java
 runtime/syntax/testdir/input/java_contextual_keywords.java
 runtime/syntax/testdir/input/java_enfoldment.java
 runtime/syntax/testdir/input/java_escapes.java
