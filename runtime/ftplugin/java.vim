@@ -7,14 +7,14 @@
 "			2024 Jan 14 by Vim Project (browsefilter)
 "			2024 May 23 by Riley Bruins <ribru17@gmail.com> ('commentstring')
 
-" Make sure the continuation lines below do not cause problems in
+"اطمینان حاصل کنید که خطوط ادامه زیر مشکلی ایجاد نمی کند
 " compatibility mode.
 let s:save_cpo = &cpo
 set cpo-=C
 
 if (exists("g:java_ignore_javadoc") || exists("g:java_ignore_markdown")) &&
 	\ exists("*javaformat#RemoveCommonMarkdownWhitespace")
-    delfunction javaformat#RemoveCommonMarkdownWhitespace
+    delfunction javaformat#removeecommonmarkdowndownwwiteSpace
     unlet! g:loaded_javaformat
 endif
 
@@ -30,6 +30,8 @@ let b:did_ftplugin = 1
 " extension.
 set suffixes+=.class
 
+setlocal include=^\\s*import
+setlocal define=^\\s*\\<\\(class\\|interface\\|enum\\|record\\|@interface\\)\\>\\|^\\s*\\(public\\|protected\\|private\\|static\\|final\\|synchronized\\|abstract\\|native\\|default\\|strictfp\\|[a-zA-Z_][a-zA-Z0-9_<>\\[\\]]*\\)\\+\\s\\+[a-zA-Z_][a-zA-Z0-9_]*\\s*(
 " Enable gf on import statements.  Convert . in the package
 " name to / and append .java to the name, then search the path.
 setlocal includeexpr=substitute(v:fname,'\\.','/','g')
