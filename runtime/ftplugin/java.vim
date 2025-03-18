@@ -7,14 +7,14 @@
 "			2024 Jan 14 by Vim Project (browsefilter)
 "			2024 May 23 by Riley Bruins <ribru17@gmail.com> ('commentstring')
 
-"اطمینان حاصل کنید که خطوط ادامه زیر مشکلی ایجاد نمی کند
+" Make sure the continuation lines below do not cause problems in
 " compatibility mode.
 let s:save_cpo = &cpo
 set cpo-=C
 
 if (exists("g:java_ignore_javadoc") || exists("g:java_ignore_markdown")) &&
 	\ exists("*javaformat#RemoveCommonMarkdownWhitespace")
-    delfunction javaformat#removeecommonmarkdowndownwwiteSpace
+    delfunction javaformat#RemoveCommonMarkdownWhitespace
     unlet! g:loaded_javaformat
 endif
 
