@@ -30,7 +30,7 @@ let b:did_ftplugin = 1
 " extension.
 set suffixes+=.class
 
-setlocal include=^\\s*import
+setlocal include=^\\s*import\\s
 setlocal define=^\\s*\\<\\(class\\|interface\\|enum\\|record\\|@interface\\)\\>\\|^\\s*\\(public\\|protected\\|private\\|static\\|final\\|synchronized\\|abstract\\|native\\|default\\|strictfp\\|[a-zA-Z_][a-zA-Z0-9_<>\\[\\]]*\\)\\+\\s\\+[a-zA-Z_][a-zA-Z0-9_]*\\s*(
 " Enable gf on import statements.  Convert . in the package
 " name to / and append .java to the name, then search the path.
