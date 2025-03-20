@@ -72,8 +72,7 @@ if exists("g:ftplugin_java_source_path") &&
       		if filereadable(ffname)
       	    	    return ffname
       		else
-      	    	    call setreg('/', escape(fname, '/'))
-      	    	    return get(s:zip_files, bufnr('%'), s:zip_files[0])
+		    return 'zipfile://' . get(s:zip_files, bufnr('%'), s:zip_files[0]) . '::java.base/' . fname
       		endif
 	    endfunction
 
@@ -388,8 +387,7 @@ if exists("s:zip_func_upgradable")
       	if filereadable(ffname)
       	    return ffname
       	else
-      	    setreg('/', escape(fname, '/'))
-      	    return get(s:zip_files, bufnr('%'), s:zip_files[0])
+	    return 'zipfile://' .. get(s:zip_files, bufnr('%'), s:zip_files[0]) .. '::java.base/' .. fname
       	endif
     enddef
 
