@@ -46,7 +46,7 @@ if !exists("g:ftplugin_java_source_path")
   elseif exists('$JAVA_HOME')
     let g:ftplugin_java_source_path = $JAVA_HOME . '/lib/src.zip'
   else
-    let s:ftplugin_java_source_path = simplify(fnamemodify(resolve(exepath('java')), ':p:h') . '/../lib/src.zip')
+    let s:ftplugin_java_source_path = simplify(fnamemodify(resolve(exepath('javac')), ':p:h') . '/../lib/src.zip')
     let g:ftplugin_java_source_path = filereadable(s:ftplugin_java_source_path) ? s:ftplugin_java_source_path : ""
     unlet s:ftplugin_java_source_path
   endif
