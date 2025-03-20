@@ -30,8 +30,9 @@ let b:did_ftplugin = 1
 " extension.
 set suffixes+=.class
 
-setlocal include=^\\s*import\\s
-setlocal define=^\\s*\\<\\(class\\|interface\\|enum\\|record\\|@interface\\)\\>\\|^\\s*\\(public\\|protected\\|private\\|static\\|final\\|synchronized\\|abstract\\|native\\|default\\|strictfp\\|[a-zA-Z_][a-zA-Z0-9_<>\\[\\]]*\\)\\+\\s\\+[a-zA-Z_][a-zA-Z0-9_]*\\s*(
+setlocal include=^\\C\\s*import\\%(\\s\\+module\\s*\\)\\?\\s
+setlocal define=^\\C\\s*\\%(\\%(public\\|protected\\|private\\|static\\|final\\|synchronized\\|abstract\\|native\\|default\\|strictfp\\)\\s\\+\\)\\?\\%(\\%(class\\|interface\\|enum\\|record\\|@interface\\)\\>\\|\\%(\\%([[:upper:][:lower:]_][[:upper:][:lower:]0-9_<>\\[\\]]*\\)\\+\\s\\+\\ze\\i\\+\\s*(\\)\\)
+
 " Enable gf on import statements.  Convert . in the package
 " name to / and append .java to the name, then search the path.
 setlocal includeexpr=substitute(v:fname,'\\.','/','g')
