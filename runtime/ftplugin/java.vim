@@ -31,7 +31,10 @@ let b:did_ftplugin = 1
 set suffixes+=.class
 
 setlocal include=^\\C\\s*import\\%(\\s\\+\\%(static\\\|module\\)\\s*\\)\\?\\s
-setlocal define=^\\C\\s*\\%(@\\%(Override\\\|Deprecated\\\|SuppressWarnings\\\|SafeVarargs\\\|FunctionalInterface\\\|Documented\\\|Inherited\\\|Retention\\\|Target\\\|Repeatable\\\|Native\\)\\s\\)\\?\\%(\\%(public\\\|protected\\\|private\\\|static\\\|final\\\|synchronized\\\|abstract\\\|native\\\|default\\\|strictfp\\\|sealed\\\|non-sealed\\\|volatile\\\|transient\\)\\s\\+\\)*\\%(\\%(class\\\|@\?interface\\\|enum\\\|record\\)\\>\\\|\\%(\\%([[:keyword:]]<>\\[\\]]*\\)\\+\\s\\+\\ze\\i\\+\\s*(\\)\\)
+let &l:define='\v\C^\s*' ..
+      \ '%(\@%(Override|Deprecated|SuppressWarnings|SafeVarargs|FunctionalInterface|Documented|Inherited|Retention|Target|Repeatable|Native)\s+)*' ..
+      \ '%(%(public|protected|private|static|final|synchronized|abstract|native|default|strictfp|sealed|non-sealed|volatile|transient)\s+)*' ..
+      \ '%(%(class|\@?interface|enum|record)>|%(%(\k[[:keyword:]<>\[\]]*)+\s+\ze\i+\s*\())'
 
 " Enable gf on import statements.  Convert . in the package
 " name to / and append .java to the name, then search the path.
