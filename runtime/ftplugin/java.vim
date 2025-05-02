@@ -349,7 +349,22 @@ function! JavaFileTypeCleanUp() abort
     silent! autocmd! java_spotbugs User <buffer>
     silent! autocmd! java_spotbugs Syntax <buffer>
     silent! autocmd! java_spotbugs_post User <buffer>
+
+    silent! nunmap <buffer> [{
+    silent! nunmap <buffer> ]}
+    silent! xunmap <buffer> [{
+    silent! xunmap <buffer> ]}
+    silent! ounmap <silent> ]}
+    silent! ounmap <silent> [{
 endfunction
+
+let b:class_pattern = '\C\%(^\|\s\)\%(class\|@\?interface\|enum\|record\)\%($\|\s\+\)\zs'
+nnoremap <silent><buffer> [{ <cmd>call search(b:class_pattern, 'sWb')<CR>
+nnoremap <silent><buffer> ]} <cmd>call search(b:class_pattern, 'sW')<CR>
+xnoremap <silent><buffer> [{ <cmd>call search(b:class_pattern, 'sWb')<CR>
+xnoremap <silent><buffer> ]} <cmd>call search(b:class_pattern, 'sW')<CR>
+onoremap <buffer><silent> ]} :<c-u>normal ]}<CR>
+onoremap <buffer><silent> [{ :<c-u>normal [{<CR>
 
 " Undo the stuff we changed.
 let b:undo_ftplugin = 'call JavaFileTypeCleanUp() | delfunction JavaFileTypeCleanUp'
