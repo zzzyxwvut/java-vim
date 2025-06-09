@@ -67,12 +67,8 @@ if exists("g:java_highlight_all") || exists("g:java_highlight_sun") || exists("g
   syn keyword javaC_SunManagementSpi PlatformMBeanProvider
   syn cluster javaClasses add=javaC_SunManagementSpi
   hi def link javaC_SunManagementSpi javaC_SunManagement
-
-  if !exists("g:java_highlight_generics")
-    syn keyword javaI_SunManagementSpi PlatformComponent
-    syn cluster javaClasses add=javaI_SunManagementSpi
-    hi def link javaI_SunManagementSpi javaI_SunManagement
-  endif
-
+  syn match   javaI_SunManagementSpi "\<PlatformComponent\>"
+  syn cluster javaClasses add=javaI_SunManagementSpi
+  hi def link javaI_SunManagementSpi javaI_SunManagement
 endif
 

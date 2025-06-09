@@ -157,26 +157,24 @@ final class TypeNameSyntaxItemGenerator
 			"if exists(\"g:java_highlight_all\")%s" +
 			"%n  \" %s";
 		final String allGuardEndTemplet = "%nendif%n%n";
-		final String genericsGuardStartTemplet =
-			"%n%n  if !exists(\"g:java_highlight_generics\")";
-		final String genericsGuardEndTemplet = "%n  endif%n";
+		final String genericsSynItemsStartTemplet =
+			"%n  syn match   java%2$s_%1$s \"\\<%3$s\\>\"";
+		final String genericsSynItemsEndTemplet =
+			"%n  syn cluster javaClasses add=java%3$s_%1$s" +
+			"%n  hi def link java%3$s_%1$s java%3$s_%2$s";
 		final String hiGroupsTemplet =
 			"%n  hi def link java%3$s_%1$s java%3$s_%2$s";
 		final String synItemsTemplet =
-			"%n  %5$ssyn keyword java%3$s_%1$s %4$s" +
-			"%n  %5$ssyn cluster javaClasses add=java%3$s_%1$s" +
-			"%n  %5$shi def link java%3$s_%1$s java%3$s_%2$s";
+			"%n  syn keyword java%3$s_%1$s %4$s" +
+			"%n  syn cluster javaClasses add=java%3$s_%1$s" +
+			"%n  hi def link java%3$s_%1$s java%3$s_%2$s";
 
 		/* PascalCased package names. */
 		final Map<String, String> titlePackNames = new HashMap<>();
 
 		for (Map.Entry<String, Map<String, Set<String>>> pack :
 						groupedTypeNames.entrySet()) {
-			final boolean isParentPack = (pack.getKey()
-							.endsWith("\u0020"));
-			final String packName = (isParentPack)
-				? pack.getKey().stripTrailing()
-				: pack.getKey();
+			final String packName = fromAliasName(pack.getKey());
 			final String modName = modNames.get(packName);
 			final String[] packNameParts = dotParser.split(
 								packName);
@@ -206,9 +204,8 @@ final class TypeNameSyntaxItemGenerator
 						packName);
 			}
 
-			if (isParentPack) {
-				for (String groupName :
-						pack.getValue().keySet())
+			if (!packName.equals(pack.getKey())) {
+				for (String groupName : pack.getValue().keySet())
 					writer.format(hiGroupsTemplet,
 							packNamePair[0],
 							packNamePair[1],
@@ -216,36 +213,43 @@ final class TypeNameSyntaxItemGenerator
 			} else {
 				for (Map.Entry<String, Set<String>> group :
 						pack.getValue().entrySet()) {
-					final String classNames = asString(
-						"\u0020",
-						group.getValue().iterator());
 					final String groupOtherName =
-							group.getKey();
-					final String groupName = ("_C".equals(
-							groupOtherName))
-						? "C"
-						: ("_I".equals(groupOtherName))
-							? "I"
-							: groupOtherName;
+						group.getKey();
+					final String groupName =
+						fromGenericName(groupOtherName);
 
-					if (groupOtherName.startsWith("_")) {
-						writer.format(genericsGuardStartTemplet)
-							.format(synItemsTemplet,
+					if (!groupName.equals(groupOtherName)) {
+						for (String className : group.getValue())
+							writer.format(genericsSynItemsStartTemplet,
+								packNamePair[0],
+								groupName,
+								className);
+
+						if (pack.getValue()
+								.getOrDefault(
+									groupName,
+									Set.of())
+								.isEmpty())
+							writer.format(genericsSynItemsEndTemplet,
 								packNamePair[0],
 								packNamePair[1],
-								groupName,
-								classNames,
-								"\u0020\u0020")
-							.format(genericsGuardEndTemplet);
+								groupName);
 					} else if (!group.getValue().isEmpty()) {
+						final String classNames = asString(
+							"\u0020",
+							group.getValue().iterator());
 						writer.format(synItemsTemplet,
 								packNamePair[0],
 								packNamePair[1],
 								groupName,
-								classNames,
-								"");
-					} else if (edgePackNames.contains(
-								packName)) {
+								classNames);
+					} else if (edgePackNames.contains(packName)
+							&& pack.getValue()
+								.getOrDefault(
+									toGenericName(
+										groupName),
+									Set.of())
+								.isEmpty()) {
 						/*
 						 * Cf. generic-only interface
 						 * members of java.base/
@@ -261,6 +265,19 @@ final class TypeNameSyntaxItemGenerator
 
 			writer.format(allGuardEndTemplet).flush();
 		}
+	}
+
+	private static String fromAliasName(String name)
+	{
+		assert (name.length() > 0);
+		return (name.charAt(name.length() - 1) == '\u0020')
+			? name.substring(0, (name.length() - 1))
+			: name;
+	}
+
+	private static String toAliasName(String name)
+	{
+		return name.concat("\u0020");
 	}
 
 	private static void linkSubpackages(
@@ -281,15 +298,12 @@ final class TypeNameSyntaxItemGenerator
 					.<Set<String>>sortedMap();
 
 			/*
-			 * Mask "_[CI]"s as "[CI]"s and duplicate the latter
+			 * Mask "[BH]"s as "[CI]"s and duplicate the latter
 			 * when found for subpackages.
 			 */
 			for (String groupName : pack.getValue().keySet())
-				linkGroupNames.put(("_C".equals(groupName))
-					? "C"
-					: ("_I".equals(groupName))
-						? "I"
-						: groupName,
+				linkGroupNames.put(
+					fromGenericName(groupName),
 					Set.of());
 
 			final Set<String> parentPackNames = new HashSet<>();
@@ -311,8 +325,8 @@ final class TypeNameSyntaxItemGenerator
 
 				if (packGroupNames == null) {
 					groupedTypeNames.computeIfAbsent(
-							parentPackName
-								.concat("\u0020"),
+							toAliasName(
+								parentPackName),
 							k -> TypeNameSyntaxItemGenerator
 								.<Set<String>>sortedMap())
 						.putAll(linkGroupNames);
@@ -335,12 +349,30 @@ final class TypeNameSyntaxItemGenerator
 		}
 	}
 
+	private static String fromGenericName(String genericName)
+	{
+		switch (genericName) {
+		case "B":	return "C";
+		case "H":	return "I";
+		default:	return genericName;
+		}
+	}
+
+	private static String toGenericName(String nonGenericName)
+	{
+		switch (nonGenericName) {
+		case "C":	return "B";
+		case "I":	return "H";
+		default:	return nonGenericName;
+		}
+	}
+
 	private static String group(Class<?> type)
 	{
 		return (type.getTypeParameters().length > 0)
 			? (type.isInterface())
-				? "_I"
-				: "_C"
+				? toGenericName("I")
+				: toGenericName("C")
 			: (type.isInterface())
 				? "I"
 				: (RuntimeException.class.isAssignableFrom(type))

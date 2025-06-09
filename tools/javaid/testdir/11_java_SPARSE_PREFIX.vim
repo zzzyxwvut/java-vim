@@ -94,19 +94,13 @@ if exists("g:java_highlight_all") || exists("g:java_highlight_java") || exists("
   syn keyword javaC_JavaNioFileAttribute AclEntry AclEntryFlag AclEntryPermission AclEntryType Builder FileTime PosixFilePermission PosixFilePermissions UserPrincipalLookupService
   syn cluster javaClasses add=javaC_JavaNioFileAttribute
   hi def link javaC_JavaNioFileAttribute javaC_JavaNioFile
+  syn match   javaI_JavaNioFileAttribute "\<FileAttribute\>"
   syn keyword javaI_JavaNioFileAttribute AclFileAttributeView AttributeView BasicFileAttributeView BasicFileAttributes DosFileAttributeView DosFileAttributes FileAttributeView FileOwnerAttributeView FileStoreAttributeView GroupPrincipal PosixFileAttributeView PosixFileAttributes UserDefinedFileAttributeView UserPrincipal
   syn cluster javaClasses add=javaI_JavaNioFileAttribute
   hi def link javaI_JavaNioFileAttribute javaI_JavaNioFile
   syn keyword javaX_JavaNioFileAttribute UserPrincipalNotFoundException
   syn cluster javaClasses add=javaX_JavaNioFileAttribute
   hi def link javaX_JavaNioFileAttribute javaX_JavaNioFile
-
-  if !exists("g:java_highlight_generics")
-    syn keyword javaI_JavaNioFileAttribute FileAttribute
-    syn cluster javaClasses add=javaI_JavaNioFileAttribute
-    hi def link javaI_JavaNioFileAttribute javaI_JavaNioFile
-  endif
-
 endif
 
 if exists("g:java_highlight_all") || exists("g:java_highlight_java") || exists("g:java_highlight_java_nio") || exists("g:java_highlight_java_nio_file") || exists("g:java_highlight_java_nio_file_spi")
@@ -130,16 +124,16 @@ endif
 
 if exists("g:java_highlight_all") || exists("g:java_highlight_java") || exists("g:java_highlight_java_util") || exists("g:java_highlight_java_util_concurrent") || exists("g:java_highlight_java_util_concurrent_atomic")
   " java.base/java.util.concurrent.atomic
+  syn match   javaC_JavaUtilConcurrentAtomic "\<AtomicIntegerFieldUpdater\>"
+  syn match   javaC_JavaUtilConcurrentAtomic "\<AtomicLongFieldUpdater\>"
+  syn match   javaC_JavaUtilConcurrentAtomic "\<AtomicMarkableReference\>"
+  syn match   javaC_JavaUtilConcurrentAtomic "\<AtomicReference\>"
+  syn match   javaC_JavaUtilConcurrentAtomic "\<AtomicReferenceArray\>"
+  syn match   javaC_JavaUtilConcurrentAtomic "\<AtomicReferenceFieldUpdater\>"
+  syn match   javaC_JavaUtilConcurrentAtomic "\<AtomicStampedReference\>"
   syn keyword javaC_JavaUtilConcurrentAtomic AtomicBoolean AtomicInteger AtomicIntegerArray AtomicLong AtomicLongArray DoubleAccumulator DoubleAdder LongAccumulator LongAdder
   syn cluster javaClasses add=javaC_JavaUtilConcurrentAtomic
   hi def link javaC_JavaUtilConcurrentAtomic javaC_JavaUtilConcurrent
-
-  if !exists("g:java_highlight_generics")
-    syn keyword javaC_JavaUtilConcurrentAtomic AtomicIntegerFieldUpdater AtomicLongFieldUpdater AtomicMarkableReference AtomicReference AtomicReferenceArray AtomicReferenceFieldUpdater AtomicStampedReference
-    syn cluster javaClasses add=javaC_JavaUtilConcurrentAtomic
-    hi def link javaC_JavaUtilConcurrentAtomic javaC_JavaUtilConcurrent
-  endif
-
 endif
 
 if exists("g:java_highlight_all") || exists("g:java_highlight_java") || exists("g:java_highlight_java_util") || exists("g:java_highlight_java_util_concurrent") || exists("g:java_highlight_java_util_concurrent_locks")
