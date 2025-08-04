@@ -110,12 +110,9 @@ syn keyword javaTypedef		this super
 syn keyword javaOperator	new instanceof
 syn match   javaOperator	"\<var\>\%(\s*(\)\@!"
 
-if s:ff.IsAnyRequestedPreviewFeatureOf([476, 494])
-  " Module imports can be used in any source file.
-  syn match   javaExternal	"\<import\s\+module\>" contains=javaModuleImport
-  syn keyword javaModuleImport	contained module
-  hi def link javaModuleImport	Statement
-endif
+" Module imports can be used in any source file.
+syn match   javaExternal	"\<import\s\+module\>" contains=javaModuleImport
+syn keyword javaModuleImport	contained module
 
 " Since the yield statement, which could take a parenthesised operand,
 " and _qualified_ yield methods get along within the switch block
@@ -911,6 +908,7 @@ hi def link javaAnnotation		PreProc
 hi def link javaAnnotationStart		javaAnnotation
 hi def link javaType			Type
 hi def link javaExternal		Include
+hi def link javaModuleImport		Statement
 
 hi def link javaUserLabel		Label
 hi def link javaUserLabelRef		javaUserLabel
