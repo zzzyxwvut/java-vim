@@ -110,6 +110,10 @@ syn keyword javaTypedef		this super
 syn keyword javaOperator	new instanceof
 syn match   javaOperator	"\<var\>\%(\s*(\)\@!"
 
+if s:ff.IsAnyRequestedPreviewFeatureOf([468])
+  syn match   javaOperator	"\<with\>\%(\_s*{\)\@="
+endif
+
 if s:ff.IsAnyRequestedPreviewFeatureOf([476, 494])
   " Module imports can be used in any source file.
   syn match   javaExternal	"\<import\s\+module\>" contains=javaModuleImport
