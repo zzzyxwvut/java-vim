@@ -305,12 +305,13 @@ if exists("g:java_highlight_all") || exists("g:java_highlight_java") || exists("
   syn match javaLangObject "\<toString\>"
   hi def link javaLangObject javaConstant
 
+  " As of JDK 25, RuntimePermission is deprecated for removal
+  "	(JDK-8353641).
+  "	(Note that SecurityException is still not deprecated.)
   " As of JDK 24, SecurityManager is rendered non-functional
   "	(JDK-8338625).
-  "	(Note that SecurityException and RuntimePermission are still
-  "	not deprecated.)
   " As of JDK 21, Compiler is no more (JDK-8205129).
-  syn keyword javaLangDeprecated Compiler SecurityManager
+  syn keyword javaLangDeprecated Compiler SecurityManager RuntimePermission
 endif
 
 runtime syntax/javaid.vim
@@ -353,7 +354,7 @@ endif
 
 exec 'syn match javaUserLabel "^\s*\<\K\k*\>\%(\<default\>\)\@' . s:ff.Peek('7', '') . '<!\s*::\@!"he=e-1'
 
-if s:ff.IsAnyRequestedPreviewFeatureOf([455, 488])
+if s:ff.IsAnyRequestedPreviewFeatureOf([455, 488, 507])
   syn region  javaLabelRegion	transparent matchgroup=javaLabel start="\<case\>" matchgroup=NONE end=":\|->" contains=javaBoolean,javaNumber,javaCharacter,javaString,javaConstant,@javaClasses,javaGenerics,javaType,javaLabelDefault,javaLabelVarType,javaLabelWhenClause
 else
   syn region  javaLabelRegion	transparent matchgroup=javaLabel start="\<case\>" matchgroup=NONE end=":\|->" contains=javaLabelCastType,javaLabelNumber,javaCharacter,javaString,javaConstant,@javaClasses,javaGenerics,javaLabelDefault,javaLabelVarType,javaLabelWhenClause
