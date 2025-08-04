@@ -3,7 +3,7 @@
 " Maintainer:		Aliaksei Budavei <0x000c70 AT gmail DOT com>
 " Former Maintainer:	Claudio Fleiner <claudio@fleiner.com>
 " Repository:		https://github.com/zzzyxwvut/java-vim.git
-" Last Change:		2026 Sep 18
+" Last Change:		2026 Sep 25
 
 " Please check ":help java.vim" for comments on some of the options
 " available.
@@ -126,6 +126,10 @@ syn keyword javaConstant	null
 syn keyword javaTypedef		this super
 syn keyword javaOperator	new instanceof
 syn match   javaOperator	"\<var\>\%(\s*(\)\@!"
+
+if s:ff.IsAnyRequestedPreviewFeatureOf([468])
+  syn match javaOperator	"\<with\>\%(\_s*{\)\@="
+endif
 
 " Module imports can be used in any source file.
 syn match   javaExternal	"\<import\s\+module\>" contains=javaModuleImport
