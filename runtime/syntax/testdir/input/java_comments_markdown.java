@@ -10,10 +10,10 @@
 // VIM_TEST_SETUP defer execute('match Visual /\%>21l\s\+$/')
 // VIM_TEST_SETUP setl spell fdc=2 fdl=64 fdm=syntax fen cole=3 cocu=n
 // VIM_TEST_SETUP highlight link javaCommentStart Todo
+// VIM_TEST_SETUP highlight link javaDocLiteralTag Todo
 // VIM_TEST_SETUP highlight link javaMarkdownCommentTitle Underlined
 // VIM_TEST_SETUP highlight link markdownH2 NonText
 // VIM_TEST_SETUP highlight link markdownHeadingRule NonText
-
 
 
 
@@ -26,20 +26,20 @@
 /// There is no textual representation:
 /// {@snippet class = MarkdownSnippets region = toString id = _02}
 class MarkdownCommentsTests implements Comparable<MarkdownCommentsTests>
-{	// JDK 23+.
+{	// JDK 2?+.
 	private MarkdownCommentsTests() { }
 
-	/// No-op, i. e. no operation.
+	/// No-op, i. e. no operation. @note [kind = tip]
 	/// ({@literal@literal} may be used with `.` for contraction.)
 	/// @return `null`
 	Void noOp1() { return null; }
 
-	/// No-op, i.e. no operation.
+	/// No-op, i.e. no operation. @note [kind = tip]
 	/// ({@literal<!-- -->} may be used after `.` for contraction.)
 	/// @return `null`
 	Void noOp2() { return null; }
 
-	/// No-op, i.e\u002e no operation.
+	/// No-op, i.e\u002e no operation. @note [kind = tip]
 	/// ({@literal\u005cu002e} is processed early, use alternatives.)
 	/// @return `null`
 	Void noOp3() { return null; }
@@ -104,6 +104,11 @@ class MarkdownCommentsTests implements Comparable<MarkdownCommentsTests>
 // javadoc --snippet-path . --source-path . -d /tmp/md_docs/ -package \
 // 	-tag 'jls:a:See Java Language Specification:' MarkdownSnippets.java
 /// Snippets for Markdown comment tests.
+///
+/// {@note [header='Note:' kind = "note" yet-another-attribute=TO.DO]
+/// [MarkdownSnippets] is declared a top-level type to facilitate the
+/// discovery of its <i>external</i> {@literal @snippets}. @note
+/// See <a href="https://openjdk.org/jeps/413">this proposal</a>.}
 class MarkdownSnippets
 {	/* 	TRAILING BLANKS AND MESSPILLINGS ARE SIGNIFICANT! */
 	private MarkdownSnippets() { }

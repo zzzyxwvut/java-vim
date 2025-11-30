@@ -600,12 +600,17 @@ if !exists("g:java_ignore_javadoc") && (s:with_html || s:with_markdown) && g:mai
   " placement.
   " Since they only have significance in javaCommentTitle, neither
   " javaDocSummaryTag nor javaDocReturnTitleTag are defined.
-  syn cluster javaDocTags	contains=javaDocAuthorTag,javaDocDeprecatedTag,javaDocExceptionTag,javaDocParamTag,javaDocReturnTag,javaDocSeeTag,javaDocVersionTag,javaDocSinceTag,javaDocLinkTag,javaDocSerialTag,javaDocSerialDataTag,javaDocSerialFieldTag,javaDocThrowsTag,javaDocDocRootTag,javaDocInheritDocTag,javaDocLinkplainTag,javaDocValueTag,javaDocCodeTag,javaDocLiteralTag,javaDocHiddenTag,javaDocIndexTag,javaDocProvidesTag,javaDocUsesTag,javaDocSystemPropertyTag,javaDocSnippetTag,javaDocSpecTag
+  syn cluster javaDocTags	contains=javaDocAuthorTag,javaDocDeprecatedTag,javaDocExceptionTag,javaDocParamTag,javaDocReturnTag,javaDocSeeTag,javaDocVersionTag,javaDocSinceTag,javaDocLinkTag,javaDocSerialTag,javaDocSerialDataTag,javaDocSerialFieldTag,javaDocThrowsTag,javaDocDocRootTag,javaDocInheritDocTag,javaDocLinkplainTag,javaDocValueTag,javaDocCodeTag,javaDocLiteralTag,javaDocHiddenTag,javaDocIndexTag,javaDocProvidesTag,javaDocUsesTag,javaDocSystemPropertyTag,javaDocSnippetTag,javaDocSpecTag,javaDocNoteTag
 
   " Anticipate non-standard inline tags in {@return} and {@summary}.
   syn region javaTitleSkipBlock	contained transparent start="{\%(@\%(return\|summary\)\>\)\@!" end="}"
   syn match  javaDocDocRootTag	contained "{@docRoot}"
   syn match  javaDocInheritDocTag contained "{@inheritDoc}"
+  exec 'syn region javaDocNoteTagAttr contained transparent matchgroup=javaHtmlArg start=/\<\%([.\\/-]\|\k\)\+\%(\s*=\)\@=/ matchgroup=javaHtmlString end=/\%(=\s*\)\@' . s:ff.PeekFor('javaDocNoteTagAttr', 80) . '<=\%("[^"]\+"\|' . "\x27[^\x27]\\+\x27" . '\|\%([.\\/-]\|\k\)\+\)/ nextgroup=javaDocNoteTagAttr skipwhite skipnl'
+  syn region javaDocNoteTagAttrList contained transparent start="\[\%([^]]\{-1,}=[^]]\)\@=" end="\]" contains=javaDocNoteTagAttr
+  " The lowest priority *SkipBlock for inline tag inclusion.
+  syn region javaNoteSkipBlock	contained transparent start="{\%(@note\>\)\@!" end="}" contains=javaNoteSkipBlock,javaDocNoteTag
+  syn region javaDocNoteTag	contained start="{@note\>" end="}" contains=javaDocNoteTag,javaNoteSkipBlock,javaDocNoteTagAttrList,javaDocCodeTag,javaDocIndexTag,javaDocLinkTag,javaDocLinkplainTag,javaDocLiteralTag,javaDocSnippetTag,javaDocSystemPropertyTag,javaDocValueTag,@javaHtml,@javaMarkdown,javaMarkdownShortcutLink
   syn region javaIndexSkipBlock	contained transparent start="{\%(@index\>\)\@!" end="}" contains=javaIndexSkipBlock,javaDocIndexTag
   syn region javaDocIndexTag	contained start="{@index\>" end="}" contains=javaDocIndexTag,javaIndexSkipBlock
   syn region javaLinkSkipBlock	contained transparent start="{\%(@link\>\)\@!" end="}" contains=javaLinkSkipBlock,javaDocLinkTag
@@ -629,6 +634,7 @@ if !exists("g:java_ignore_javadoc") && (s:with_html || s:with_markdown) && g:mai
   syn match  javaDocAuthorTag	contained "@author\>"
   syn match  javaDocDeprecatedTag contained "@deprecated\>"
   syn match  javaDocHiddenTag	contained "@hidden\>"
+  syn match  javaDocNoteTag	contained "@note\>" nextgroup=javaDocNoteTagAttrList skipwhite skipempty
   syn match  javaDocReturnTag	contained "@return\>"
   syn match  javaDocSerialTag	contained "@serial\>"
   syn match  javaDocSerialDataTag contained "@serialData\>"
@@ -679,6 +685,7 @@ if !exists("g:java_ignore_javadoc") && (s:with_html || s:with_markdown) && g:mai
   hi def link javaDocLinkTag		Special
   hi def link javaDocLinkplainTag	Special
   hi def link javaDocLiteralTag		Special
+  hi def link javaDocNoteTag		Special
   hi def link javaDocParamTag		Special
   hi def link javaDocReturnTag		Special
   hi def link javaDocSeeTag		Special

@@ -11,8 +11,8 @@
 // VIM_TEST_SETUP setlocal spell fdc=2 fdl=64 fdm=syntax fen
 // VIM_TEST_SETUP highlight link javaCommentStart Todo
 // VIM_TEST_SETUP highlight link javaCommentTitle Underlined
-
-
+// VIM_TEST_SETUP highlight link javaDocLinkTag Todo
+// VIM_TEST_SETUP highlight link javaDocLiteralTag Todo
 
 
 
@@ -24,20 +24,20 @@
  * <p>There is no textual representation:
  * {@snippet class = HTMLSnippets region = toString id = _02} */
 class HTMLCommentsTests implements Comparable<HTMLCommentsTests>
-{	// JDK 21+.
+{	// JDK 2?+.
 	private HTMLCommentsTests() { }
 
-	/** No-op, i. e. no operation.
+	/** No-op, i. e. no operation. @note [kind = tip]
 	* ({@literal@literal} may be used with {@code .} for contraction.)
 	* @return {@code null} */
 	Void noOp1() { return null; }
 
-	/** No-op, i.e. no operation.
+	/** No-op, i.e. no operation. @note [kind = tip]
 	* ({@literal<!-- -->} may be used after {@code .} for contraction.)
 	* @return {@code null} */
 	Void noOp2() { return null; }
 
-	/** No-op, i.e\u002e no operation.
+	/** No-op, i.e\u002e no operation. @note [kind = tip]
 	* ({@literal\u005cu002e} is processed early, use alternatives.)
 	* @return {@code null} */
 	Void noOp3() { return null; }
@@ -96,7 +96,12 @@ class HTMLCommentsTests implements Comparable<HTMLCommentsTests>
 
 // javadoc --snippet-path . --source-path . -d /tmp/html_docs/ -package \
 // 	-tag 'jls:a:See Java Language Specification:' HTMLSnippets.java
-/** Snippets for HTML comment tests. */
+/** Snippets for HTML comment tests.
+ *
+ * {@note [header='Note:' kind = "note" yet-another-attribute=TO.DO]
+ * {@link HTMLSnippets} is declared a top-level type to facilitate the
+ * discovery of its <i>external</i> {@literal @snippets}. @note
+ * See <a href="https://openjdk.org/jeps/413">this proposal</a>.} */
 class HTMLSnippets
 {	/* 	TRAILING BLANKS AND MESSPILLINGS ARE SIGNIFICANT! */
 	private HTMLSnippets() { }
