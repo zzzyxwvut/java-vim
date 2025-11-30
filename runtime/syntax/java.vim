@@ -3,7 +3,7 @@
 " Maintainer:		Aliaksei Budavei <0x000c70 AT gmail DOT com>
 " Former Maintainer:	Claudio Fleiner <claudio@fleiner.com>
 " Repository:		https://github.com/zzzyxwvut/java-vim.git
-" Last Change:		2026 Mar 22
+" Last Change:		2026 Jun 02
 
 " Please check ":help java.vim" for comments on some of the options
 " available.
@@ -599,8 +599,36 @@ if !exists("g:java_ignore_javadoc") && (s:with_html || s:with_markdown) && g:mai
   " be pre-sorted and appended without disturbing the current member
   " placement.
   " Since they only have significance in javaCommentTitle, neither
-  " javaDocSummaryTag nor javaDocReturnTitleTag are defined.
-  syn cluster javaDocTags	contains=javaDocAuthorTag,javaDocDeprecatedTag,javaDocExceptionTag,javaDocParamTag,javaDocReturnTag,javaDocSeeTag,javaDocVersionTag,javaDocSinceTag,javaDocLinkTag,javaDocSerialTag,javaDocSerialDataTag,javaDocSerialFieldTag,javaDocThrowsTag,javaDocDocRootTag,javaDocInheritDocTag,javaDocLinkplainTag,javaDocValueTag,javaDocCodeTag,javaDocLiteralTag,javaDocHiddenTag,javaDocIndexTag,javaDocProvidesTag,javaDocUsesTag,javaDocSystemPropertyTag,javaDocSnippetTag,javaDocSpecTag
+  " javaDocSummaryTag nor javaDocReturnTitleTag are defined; and
+  " javaDocNoteTag is entered elsewhere.
+  let s:standard_tags = split('author deprecated exception param return see version since link serial serialData serialField throws docRoot inheritDoc linkplain value code literal hidden index provides uses summary systemProperty snippet spec')
+  exec 'syn cluster javaDocTags contains=' . join(map(copy(s:standard_tags), '"javaDoc" . toupper(v:val[0]) . v:val[1 :] . "Tag"' ), ',')
+  syn cluster javaDocTags remove=javaDocSummaryTag
+  syn region javaHtmlString	contained start=/"/ end=/"/ contains=@javaHtml,@javaMarkdown,@javaDocTags
+  syn region javaHtmlString	contained start=/'/ end=/'/ contains=@javaHtml,@javaMarkdown,@javaDocTags
+  syn match javaHtmlName	contained /\<\%([.-]\|\k\)\+/ nextgroup=javaHtmlValue,javaHtmlString skipwhite skipnl
+  exec 'syn match javaHtmlValue contained /\%(=\s*\)\@' . s:ff.PeekFor('javaHtmlValue', 80) . '<=\<\%([.-]\|\k\)\+/ contains=@javaHtml,@javaMarkdown,@javaDocTags'
+  syn region javaDocNoteTagAttrList contained transparent start=/\[/ end=/\]/ contains=javaHtmlName,javaHtmlValue,javaHtmlString
+
+  let s:custom_tags = []
+  let s:idx = 0
+
+  for s:tag in insert(copy(get(g:, 'java_highlight_custom_tags', [])), 'note', 0)
+    " Do not process a custom tag that complements a standard tag,
+    " e.g. "summary" (inline only), "spec" (block only), etc.
+    if index(s:custom_tags, s:tag) < 0 && index(s:standard_tags, s:tag) < 0 && s:tag =~ '^\K\@=\S\+$'
+      call add(s:custom_tags, s:tag)
+      let s:idx += 1
+      exec 'syn cluster javaDocTags add=javaDocNote' . s:idx . 'Tag'
+      " The lowest priority *SkipBlock for inline tag inclusion.
+      exec 'syn region javaNoteTag' . s:idx . 'SkipBlock contained transparent start="{\%(@' . s:tag . '\>\)\@!" end="}" contains=javaNoteTag' . s:idx . 'SkipBlock,javaDocNote' . s:idx . 'Tag'
+      exec 'syn region javaDocNote' . s:idx . 'Tag contained start="{@' . s:tag . '\>" end="}" contains=javaDocNote' . s:idx . 'Tag,javaNoteTag' . s:idx . 'SkipBlock,javaDocCodeTag,javaDocIndexTag,javaDocLinkTag,javaDocLinkplainTag,javaDocLiteralTag,javaDocSnippetTag,javaDocSystemPropertyTag,javaDocValueTag,@javaHtml,@javaMarkdown,javaMarkdownShortcutLink nextgroup=javaDocNoteTagAttrList skipwhite skipempty'
+      exec 'syn match  javaDocNote' . s:idx . 'Tag contained "@' . s:tag . '\>" nextgroup=javaDocNoteTagAttrList skipwhite skipempty'
+      exec 'hi def link javaDocNote' . s:idx . 'Tag Special'
+    endif
+  endfor
+
+  unlet s:tag s:idx s:custom_tags s:standard_tags
 
   " Anticipate non-standard inline tags in {@return} and {@summary}.
   syn region javaTitleSkipBlock	contained transparent start="{\%(@\%(return\|summary\)\>\)\@!" end="}"
@@ -970,6 +998,8 @@ hi def link javaCommentStart		javaComment
 
 hi def link javaHtmlArg			Type
 hi def link javaHtmlString		String
+hi def link javaHtmlName		javaHtmlArg
+hi def link javaHtmlValue		javaHtmlString
 
 let b:current_syntax = "java"
 

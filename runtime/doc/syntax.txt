@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 9.2.  Last change: 2026 Jun 01
+*syntax.txt*	For Vim version 9.2.  Last change: 2026 Jun 02
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -2216,6 +2216,9 @@ diverge as follows:
 	*Special	special symbols
      and some of their arguments are colored as
 	*Function	function names.
+To highlight custom documentation tags and their attributes, make tag names
+known beforehand: >
+	:let g:java_highlight_custom_tags = ["tip", "warning"]
 To turn this feature off for both HTML and Markdown, add the following line to
 your startup file: >
 	:let g:java_ignore_javadoc = 1

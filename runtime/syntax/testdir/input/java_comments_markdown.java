@@ -2,18 +2,18 @@
 // VIM_TEST_SETUP unlet! g:java_no_trail_space_error
 // VIM_TEST_SETUP let[g:java_space_errors,g:java_comment_strings]=[1,1]
 // VIM_TEST_SETUP let[g:java_ignore_html,g:markdown_syntax_conceal]=[1,1]
+// VIM_TEST_SETUP let g:java_highlight_custom_tags = ["tip","⚠"]
 // VIM_TEST_SETUP let g:html_syntax_folding = 1
 // VIM_TEST_SETUP let g:java_consent_to_html_syntax_folding = 1
 // VIM_TEST_SETUP let g:markdown_fenced_languages = ["java"]
 
-
 // VIM_TEST_SETUP defer execute('match Visual /\%>21l\s\+$/')
 // VIM_TEST_SETUP setl spell fdc=2 fdl=64 fdm=syntax fen cole=3 cocu=n
 // VIM_TEST_SETUP highlight link javaCommentStart Todo
+// VIM_TEST_SETUP highlight link javaDocLiteralTag Todo
 // VIM_TEST_SETUP highlight link javaMarkdownCommentTitle Underlined
 // VIM_TEST_SETUP highlight link markdownH2 NonText
 // VIM_TEST_SETUP highlight link markdownHeadingRule NonText
-
 
 
 
@@ -26,21 +26,21 @@
 /// There is no textual representation:
 /// {@snippet class = MarkdownSnippets region = toString id = _02}
 class MarkdownCommentsTests implements Comparable<MarkdownCommentsTests>
-{	// JDK 23+.
+{	// JDK 2?+.
 	private MarkdownCommentsTests() { }
 
-	/// No-op, i. e. no operation.
-	/// ({@literal@literal} may be used with `.` for contraction.)
+	/// No-op, i. e. no operation. @tip [message="{@literal@literal}
+	/// may be used with `.` for contraction." kind = tip]
 	/// @return `null`
 	Void noOp1() { return null; }
 
-	/// No-op, i.e. no operation.
-	/// ({@literal<!-- -->} may be used after `.` for contraction.)
+	/// No-op, i.e. no operation. @tip [message='{@literal<!-- -->}
+	/// may be used after `.` for contraction.' kind = tip]
 	/// @return `null`
 	Void noOp2() { return null; }
 
-	/// No-op, i.e\u002e no operation.
-	/// ({@literal\u005cu002e} is processed early, use alternatives.)
+	/// No-op, i.e\u002e no operation. @tip [kind = tip message = "!
+	/// {@literal\u005cu002e} is processed early, use alternatives."]
 	/// @return `null`
 	Void noOp3() { return null; }
 
@@ -104,6 +104,11 @@ class MarkdownCommentsTests implements Comparable<MarkdownCommentsTests>
 // javadoc --snippet-path . --source-path . -d /tmp/md_docs/ -package \
 // 	-tag 'jls:a:See Java Language Specification:' MarkdownSnippets.java
 /// Snippets for Markdown comment tests.
+///
+/// {@note [header='Note:' kind = "note" yet-another-attribute=TO.DO]
+/// [MarkdownSnippets] is declared a top-level type to facilitate the
+/// discovery of its <i>external</i> {@literal @snippets}. @note
+/// See <a href="https://openjdk.org/jeps/413">this proposal</a>.}
 class MarkdownSnippets
 {	/* 	TRAILING BLANKS AND MESSPILLINGS ARE SIGNIFICANT! */
 	private MarkdownSnippets() { }
