@@ -64,9 +64,21 @@ unlet! s:zip_func_upgradable
 
 """" STRIVE TO REMAIN COMPATIBLE FOR AT LEAST VIM 7.0.
 
-" Documented in ":help ft-java-plugin".
+if !exists("g:ftplugin_java_source_path")
+  if exists('$SOURCEPATH')
+    let g:ftplugin_java_source_path = $SOURCEPATH
+  elseif exists('$JAVA_HOME')
+    let g:ftplugin_java_source_path = $JAVA_HOME . '/lib/src.zip'
+  else
+    let s:ftplugin_java_source_path = simplify(fnamemodify(resolve(exepath('javac')), ':p:h') . '/../lib/src.zip')
+    let g:ftplugin_java_source_path = filereadable(s:ftplugin_java_source_path) ? s:ftplugin_java_source_path : ""
+    unlet s:ftplugin_java_source_path
+  endif
+endif
+
 if exists("g:ftplugin_java_source_path") &&
-		\ type(g:ftplugin_java_source_path) == type("")
+		\ type(g:ftplugin_java_source_path) == type("") &&
+		\ g:ftplugin_java_source_path !=# ""
     if filereadable(g:ftplugin_java_source_path)
 	if exists("#zip") &&
 		    \ g:ftplugin_java_source_path =~# '.\.\%(jar\|zip\)$'
@@ -79,8 +91,13 @@ if exists("g:ftplugin_java_source_path") &&
 	    let s:zip_func_upgradable = 1
 
 	    function! JavaFileTypeZipFile() abort
-		let @/ = substitute(v:fname, '\.', '\\/', 'g') . '.java'
-		return get(s:zip_files, bufnr('%'), s:zip_files[0])
+		let fname = tr(v:fname, '.', '/') .. '.java'
+      		let ffname = findfile(fname)
+      		if filereadable(ffname)
+      	    	    return ffname
+      		else
+		    return 'zipfile://' . get(s:zip_files, bufnr('%'), s:zip_files[0]) . '::java.base/' . fname
+      		endif
 	    endfunction
 
 	    " E120 for "inex=s:JavaFileTypeZipFile()" before v8.2.3900.
@@ -389,8 +406,13 @@ if exists("s:zip_func_upgradable")
     delfunction! JavaFileTypeZipFile
 
     def! s:JavaFileTypeZipFile(): string
-	@/ = substitute(v:fname, '\.', '\\/', 'g') .. '.java'
-	return get(zip_files, bufnr('%'), zip_files[0])
+	const fname = tr(v:fname, '.', '/') .. '.java'
+      	const ffname = findfile(fname)
+      	if filereadable(ffname)
+      	    return ffname
+      	else
+	    return 'zipfile://' .. get(s:zip_files, bufnr('%'), s:zip_files[0]) .. '::java.base/' .. fname
+      	endif
     enddef
 
     setlocal includeexpr=s:JavaFileTypeZipFile()
