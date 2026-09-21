@@ -1,4 +1,4 @@
-*syntax.txt*	For Vim version 9.2.  Last change: 2026 Mar 22
+*syntax.txt*	For Vim version 9.2.  Last change: 2026 Sep 21
 
 
 		  VIM REFERENCE MANUAL	  by Bram Moolenaar
@@ -230,6 +230,7 @@ you can see the actual color, except for "Ignore"):
 	 Character	a character constant: 'c', '\n'
 	 Number		a number constant: 234, 0xff
 	 Boolean	a boolean constant: TRUE, false
+	 Regexp		a regular expression constant: /ab*c/
 	 Float		a floating point constant: 2.3e10
 
 	*Identifier	any variable name
@@ -402,9 +403,8 @@ the desired value, or restored to their default by removing the variable using
 Remarks:
 - Some truly ancient browsers may not show the background colors.
 - From most browsers you can also print the file (in color)!
-- The latest TOhtml may actually work with older versions of Vim, but some
-  features such as conceal support will not function, and the colors may be
-  incorrect for an old Vim without GUI support compiled in.
+- Colors may be incorrect for Vim without GUI support compiled in.
+- The latest TOhtml requires Vim 9.1 or later.
 
 Here is an example how to run the script over all .c and .h files from a
 Unix shell: >
@@ -849,6 +849,19 @@ ADA
 See |ft-ada-syntax|
 
 
+ALGOL 68					*algol68* *ft-algol68-syntax*
+
+This syntax file currently targets the Algol 68 Genie project using the
+default UPPER stropping regime.  It should also be usable in other
+environments using the UPPER stropping regime, though somewhat less complete.
+
+Highlighting can be further configured with the following variables.
+
+Variable			Highlight ~
+*algol68_no_preludes*		no prelude identifiers, procedures or
+				operators
+
+
 ANT						*ant.vim* *ft-ant-syntax*
 
 The ant syntax file provides syntax highlighting for javascript and python
@@ -1071,6 +1084,7 @@ Variable		Highlight ~
 *c_no_c99*		don't highlight C99 standard items
 *c_no_c11*		don't highlight C11 standard items
 *c_no_c23*		don't highlight C23 standard items
+*c_no_c29*		don't highlight C29 standard items
 *c_no_bsd*		don't highlight BSD specific types
 *c_functions*		highlight function calls and definitions
 *c_function_pointers*	highlight function pointers definitions
@@ -1248,6 +1262,8 @@ cpp_no_cpp11		don't highlight C++11 standard items
 cpp_no_cpp14		don't highlight C++14 standard items
 cpp_no_cpp17		don't highlight C++17 standard items
 cpp_no_cpp20		don't highlight C++20 standard items
+cpp_no_cpp23		don't highlight C++23 standard items
+cpp_no_cpp26		don't highlight C++26 standard items
 
 
 CSH						*csh.vim* *ft-csh-syntax*
@@ -1393,18 +1409,20 @@ are using the "b:docbk_type" variable should be set.  Vim does this for you
 automatically if it can recognize the type.  When Vim can't guess it the type
 defaults to XML.
 You can set the type manually: >
-	:let docbk_type = "sgml"
+	:let b:docbk_type = "sgml"
 or: >
-	:let docbk_type = "xml"
+	:let b:docbk_type = "xml"
 You need to do this before loading the syntax file, which is complicated.
 Simpler is setting the filetype to "docbkxml" or "docbksgml": >
 	:set filetype=docbksgml
 or: >
 	:set filetype=docbkxml
 
-You can specify the DocBook version: >
-	:let docbk_ver = 3
-When not set 4 is used.
+You can specify the DocBook version for the current buffer: >
+	:let b:docbk_ver = 3
+When "b:docbk_ver" is not set, "g:docbk_ver" is used as a global fallback: >
+	:let g:docbk_ver = 3
+When neither variable is set, version 4 is used.
 
 
 DOSBATCH				*dosbatch.vim* *ft-dosbatch-syntax*
@@ -1995,9 +2013,11 @@ You can also disable this rendering by adding the following line to your
 vimrc file: >
 	:let html_no_rendering=1
 
-By default Vim synchronises the syntax to 250 lines before the first displayed
-line.  This can be configured using: >
+By default Vim starts parsing 1.5 times "html_minlines" lines before the first
+displayed line, and searches a further "html_maxlines" lines back for a
+synchronization point.  These values can be configured using: >
 	:let html_minlines = 500
+	:let html_maxlines = 750
 <
 HTML comments are rather special (see an HTML reference document for the
 details), and the syntax coloring scheme will highlight all errors.
@@ -3691,12 +3711,15 @@ reduce this, the "sh_maxlines" internal variable can be set.  Example: >
 The default is to use the twice sh_minlines.  Set it to a smaller number to
 speed up displaying.  The disadvantage is that highlight errors may appear.
 
-syntax/sh.vim tries to flag certain problems as errors; usually things like
-unmatched "]", "done", "fi", etc.  If you find the error handling problematic
-for your purposes, you may suppress such error highlighting by putting
-the following line in your .vimrc: >
+Unmatched "]", "done", "fi", etc., are highlighted as errors by default.  If
+you find this error handling problematic, you may suppress it with: >
 
-	let g:sh_no_error= 1
+	let g:sh_no_error = 1
+<
+As a refinement, you may suppress particular classes of errors by looking up
+their syntax rule names and listing them with: >
+
+	let g:sh_no_error_rules = ["shCurlyError", "shParenError"]
 <
 
 						*sh-embed*  *sh-awk*
@@ -4142,6 +4165,7 @@ Some folding is now supported with when 'foldmethod' is set to "syntax": >
    g:vimsyn_folding =~# 'P' : fold Python   heredocs
    g:vimsyn_folding =~# 'r' : fold Ruby     heredocs
    g:vimsyn_folding =~# 't' : fold Tcl      heredocs
+   g:vimsyn_folding =~# 'T' : fold :append, :change and :insert
 <
 
 By default, g:vimsyn_folding is unset.  Concatenate the indicated characters
@@ -5856,6 +5880,8 @@ font={font-name}					*highlight-font*
 	When setting the font for the "Normal" group, this becomes the default
 	font (until the 'guifont' option is changed; the last one set is
 	used).
+	In the GTK GUI, a font can only be set for the "Normal" group; for
+	other groups it is accepted but has no effect.
 	The following only works with Motif, not with other GUIs:
 	When setting the font for the "Menu" group, the menus will be changed.
 	When setting the font for the "Tooltip" group, the tooltips will be
@@ -5866,7 +5892,7 @@ font={font-name}					*highlight-font*
 	To use a font name with an embedded space or other special character,
 	put it in single quotes.  The single quote cannot be used then.
 	Example: >
-	    :hi comment font='Monospace 10'
+	    :hi Normal font='Monospace 10'
 
 guifg={color-name}					*highlight-guifg*
 guibg={color-name}					*highlight-guibg*
@@ -5978,7 +6004,14 @@ EndOfBuffer	Filler lines (~) after the last line in the buffer.
 							*hl-ErrorMsg*
 ErrorMsg	Error messages on the command line.
 							*hl-VertSplit*
-VertSplit	Column separating vertically split windows.
+VertSplit	Column separating vertically split windows that is adjacent
+		to the current window.  Drawn with the "vert" item of
+		'fillchars'.
+							*hl-VertSplitNC*
+VertSplitNC	Column separating vertically split windows where neither
+		adjacent window is the current window.  Drawn with the
+		"vert" item of 'fillchars'.
+		By default, highlighted like |hl-VertSplit|.
 							*hl-Folded*
 Folded		Line used for closed folds.
 							*hl-FoldColumn*
@@ -6056,6 +6089,18 @@ PmenuShadow	Popup menu: Used for shadow.
 ComplMatchIns	Matched text of the currently inserted completion.
 							*hl-PreInsert*
 PreInsert	Text inserted when "preinsert" is in 'completeopt'.
+							*hl-Popup*
+Popup		Popup window body, used when neither the popup's 'wincolor'
+		nor explicit "highlight" argument is set.  Linked to |hl-Pmenu|
+		by default.
+							*hl-PopupBorder*
+PopupBorder	Popup window border characters, used when "borderhighlight" is
+		not set and the popup's 'wincolor' is also not set.
+		Linked to |hl-Pmenu| by default.
+							*hl-PopupTitle*
+PopupTitle	Popup window title, used when "borderhighlight" is not set and
+		the popup's 'wincolor' is also not set.  Linked to
+		|hl-Pmenu| by default.
 							*hl-PopupSelected*
 PopupSelected	Popup window created with |popup_menu()|.  Linked to
 		|hl-PmenuSel| by default.
@@ -6094,16 +6139,23 @@ SpellRare	Word that is recognized by the spellchecker as one that is
 		hardly ever used. |spell|
 		This will be combined with the highlighting used otherwise.
 							*hl-StatusLine*
-StatusLine	Status line of current window.
+StatusLine	Status line of current window.  The highlight at the status
+		line's edge (StatusLine, or any %#... / %N* in 'statusline')
+		also extends into the adjacent vertical separator cell when
+		the status lines are connected (The "vert" in 'fillchars' is
+		not being drawn).
 							*hl-StatusLineNC*
-StatusLineNC	status lines of not-current windows
+StatusLineNC	status lines of not-current windows.  Like |hl-StatusLine|,
+		the edge highlight also extends into the adjacent vertical
+		separator cell.
 		Note: If this is equal to "StatusLine", Vim will use "^^^" in
 		the status line of the current window.
 							*hl-StatusLineTerm*
 StatusLineTerm	Status line of current window, if it is a |terminal| window.
 							*hl-StatusLineTermNC*
-StatusLineTermNC	Status lines of not-current windows that is a
-			|terminal| window.
+StatusLineTermNC
+		Status lines of not-current windows that is a |terminal|
+		window.
 							*hl-TabLine*
 TabLine		Tab pages line, not active tab page label.
 							*hl-TabLineFill*
@@ -6123,18 +6175,19 @@ Title		Titles for output from ":set all", ":autocmd" etc.
 							*hl-TitleBar*
 TitleBar	Title bar for the active Gui's window.
 		This feature is supported only in the MS-Windows GUI.
-		See |gui-w32-title-bar| for details
+		See |gui-w32-title-bar| for details.
 		Only the `guibg` and `guifg` highlight arguments are effective.
 							*hl-TitleBarNC*
 TitleBarNC	Title bar for inactive Gui's window.
 		This feature is supported only in the MS-Windows GUI.
-		See |gui-w32-title-bar| for details
+		See |gui-w32-title-bar| for details.
 		Only the `guibg` and `guifg` highlight arguments are effective.
 							*hl-Visual*
 Visual		Visual mode selection.
 							*hl-VisualNOS*
 VisualNOS	Visual mode selection when vim is "Not Owning the Selection".
-		Only X11 Gui's |gui-x11| and |xterm-clipboard| supports this.
+		Only X11 Gui's |gui-x11|, |xterm-clipboard| and
+		|wayland-selections| supports this.
 							*hl-WarningMsg*
 WarningMsg	Warning messages.
 							*hl-WildMenu*
@@ -6154,10 +6207,9 @@ Menu		Current font, background and foreground colors of the menus.
 		Also used for the toolbar.
 		Applicable highlight arguments: font, guibg, guifg.
 
-		NOTE: For Motif the font argument actually
-		specifies a fontset at all times, no matter if 'guifontset' is
-		empty, and as such it is tied to the current |:language| when
-		set.
+		NOTE: For Motif the font argument actually specifies a fontset
+		at all times, no matter if 'guifontset' is empty, and as such
+		it is tied to the current |:language| when set.
 
 							*hl-Scrollbar*
 Scrollbar	Current background and foreground of the main window's
@@ -6168,10 +6220,9 @@ Scrollbar	Current background and foreground of the main window's
 Tooltip		Current font, background and foreground of the tooltips.
 		Applicable highlight arguments: font, guibg, guifg.
 
-		NOTE: For Motif the font argument actually
-		specifies a fontset at all times, no matter if 'guifontset' is
-		empty, and as such it is tied to the current |:language| when
-		set.
+		NOTE: For Motif the font argument actually specifies a fontset
+		at all times, no matter if 'guifontset' is empty, and as such
+		it is tied to the current |:language| when set.
 
 ==============================================================================
 15. Linking groups		*:hi-link* *:highlight-link* *E412* *E413*
